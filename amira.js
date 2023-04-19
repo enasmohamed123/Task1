@@ -1,36 +1,60 @@
-const express = require('express');
-const res = require('express/lib/response');
-
-
-
+ import express from "express";
+import { engine } from 'express-handlebars';
 const app = express();
-
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './templates');
 const students = [
+    {
+        id: 1,
+        name: "ahmed",
+        city: "shibin"
+    },
+    {
+        id: 2,
+        name: 'yasser',
+        city: 'tanta'
 
-    "amira",
-    "eman",
-    "engy",
-       
+
+    },
+    {
+        id: 3,
+        name: 'andrea',
+        city: 'tanta'
+
+
+    },
+    {
+        id: 4,
+        name: 'mohamed',
+        city: 'shebin'
+
+
+    },
 ];
 
- const studentsFunction = (request, response) =>{
-    let output ='<ul>';
+const studentsFunction = (request, response) => {
+    response.render('students',{layout: false, students})
 
-
-for (let i = 0; i < students.length ; i++) {
-    output +="<li>" + students[i] + "</li>";
-
-
-
+    
 }
 
-    output += "</ul>";
 
+app.get("/students", studentsFunction);
 
-    response.send(output);
- };
+app.get('/students/:id',(req,res)=> {
+    const id=req.params.id;
+    const student=students.find((item)=>{
+        return item.id==id})
+    res.render("students", { layout: false, student: student })
+    
+    
+    });
+    
 
- app.get('/students', studentsFunction);
-
-
-app.listen(5000); 
+app.get('/users',(req,res)=> {
+    res.render("users")
+    
+});
+ 
+app.listen(5000);
